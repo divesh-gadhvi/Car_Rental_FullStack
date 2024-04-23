@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AdminService } from '../../services/admin.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-car',
@@ -29,7 +32,12 @@ export class PostCarComponent {
   listOfColor = ['Red', 'White', 'Blue', 'Black', 'Orange', 'Grey', 'Silver'];
   listOfTransmission = ['Manual', 'Automatic'];
 
-  constructor (private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private adminService: AdminService,
+    private message: NzMessageService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.postCarForm = this.fb.group({
@@ -40,16 +48,18 @@ export class PostCarComponent {
       transmission: [null, Validators.required],
       price: [null, Validators.required],
       description: [null, Validators.required],
-      year: [null, Validators.required]
-    })
+      year: [null, Validators.required],
+    });
   }
 
   postCar() {
     console.log(this.postCarForm);
-    const formData: FormData = new FormData();
-    if(this.selectedFile){
-      formData.append('img', this.selectedFile);
+    this.isSpinning = true;
+    const payload = new FormData();
+    if (this.selectedFile) {
+      payload.append('image', this.selectedFile, this.selectedFile.name);
     }
+    /*
     const brandValue = this.postCarForm.get('brand')?.value;
     formData.append('brand', brandValue);
     formData.append('name', this.postCarForm.get('name')?.value);
@@ -59,7 +69,26 @@ export class PostCarComponent {
     formData.append('transmission', this.postCarForm.get('transmission')?.value);
     formData.append('description', this.postCarForm.get('description')?.value);
     formData.append('price', this.postCarForm.get('price')?.value);
-    console.log(formData);
+    */
+    
+    for (const key in this.postCarForm.controls) {
+      if (this.postCarForm.controls.hasOwnProperty(key)) {
+        payload.append(key, this.postCarForm.controls[key].value);
+      }
+    }
+
+    this.adminService.postCar(payload).subscribe(
+      (res) => {
+        this.isSpinning = false;
+        this.message.success('Car posted successfully!', { nzDuration: 5000 });
+        this.router.navigateByUrl('/admin/dashboard');
+        console.log(res);
+      },
+      (error) => {
+        console.error('Error: ', error);
+        this.message.error('Error while posting car', { nzDuration: 5000 });
+      }
+    );
   }
 
   onFileSelected(event: any) {
