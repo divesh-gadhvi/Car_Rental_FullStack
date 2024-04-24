@@ -8,6 +8,8 @@ import com.springproject.car_rental_spring.repository.CarRepository;
 
 import lombok.RequiredArgsConstructor;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +35,10 @@ public class AdminServiceImpl implements AdminService {
             System.out.println("An error occurred: " + e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    public List<CarDTO> getAllCars() {
+        return carRepository.findAll().stream().map(Car::getCarDTO).collect(Collectors.toList());
     }
 }

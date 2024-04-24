@@ -11,10 +11,17 @@ const BASIC_URL = ["http://localhost:8080"];
 export class AdminService {
 
   constructor(private http: HttpClient) { }
+  
   postCar(carDTO: any):Observable<any>{
     return this.http.post(BASIC_URL+"/api/admin/car", carDTO, {
       headers: this.createAuthorizationHeader()
     });
+  }
+
+  getAllCars():Observable<any>{
+    return this.http.get(BASIC_URL+"/api/admin/cars", {
+      headers: this.createAuthorizationHeader()
+    })
   }
 
   createAuthorizationHeader(): HttpHeaders {

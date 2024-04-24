@@ -9,6 +9,8 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import java.util.Date;
 
+import com.springproject.car_rental_spring.dto.CarDTO;
+
 @Entity
 @Data
 @Table(name = "cars")
@@ -29,5 +31,20 @@ public class Car {
 
     @Column(columnDefinition = "longblob")
     private byte[] image;
+
+    public CarDTO getCarDTO(){
+        CarDTO carDTO = new CarDTO();
+        carDTO.setId(id);
+        carDTO.setName(name);
+        carDTO.setBrand(brand);
+        carDTO.setColor(color);
+        carDTO.setPrice(price);
+        carDTO.setDescription(description);
+        carDTO.setType(type);
+        carDTO.setTransmission(transmission);
+        carDTO.setYear(year);
+        carDTO.setReturnedImage(image);
+        return carDTO;
+    }
 
 }
