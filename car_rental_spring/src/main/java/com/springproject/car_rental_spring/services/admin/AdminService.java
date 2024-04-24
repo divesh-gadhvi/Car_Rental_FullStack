@@ -9,4 +9,6 @@ public interface AdminService {
     
     boolean postCar(CarDTO carDTO) throws IOException;
     List<CarDTO> getAllCars();
+
+    void deleteCar(Long id);
 }
