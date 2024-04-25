@@ -1,20 +1,23 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdminService } from '../../services/admin.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-post-car',
-  templateUrl: './post-car.component.html',
-  styleUrl: './post-car.component.scss',
+  selector: 'app-update-car',
+  templateUrl: './update-car.component.html',
+  styleUrl: './update-car.component.scss',
 })
-export class PostCarComponent {
-  postCarForm!: FormGroup;
-  isSpinning: boolean = false;
-  selectedFile!: File | null;
+export class UpdateCarComponent {
+  isSpinning = false;
+  carId: number = this.activateRoute.snapshot.params['id'];
+  imgChanged: boolean = false;
+  selectedFile: any;
   imagePreview!: string | ArrayBuffer | null;
-  listOfOptions: Array<{label: string; value: string}> = [];
+  existingImage: string | null = null;
+  updateForm!: FormGroup;
+  listOfOptions: Array<{ label: string; value: string }> = [];
   listOfBrands = [
     'BMW',
     'AUDI',
@@ -34,14 +37,15 @@ export class PostCarComponent {
   listOfTransmission = ['Manual', 'Automatic'];
 
   constructor(
-    private fb: FormBuilder,
     private adminService: AdminService,
+    private activateRoute: ActivatedRoute,
+    private fb: FormBuilder,
     private message: NzMessageService,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.postCarForm = this.fb.group({
+    this.updateForm = this.fb.group({
       name: [null, Validators.required],
       brand: [null, Validators.required],
       type: [null, Validators.required],
@@ -51,38 +55,50 @@ export class PostCarComponent {
       description: [null, Validators.required],
       year: [null, Validators.required],
     });
+    this.getCarById();
   }
 
-  postCar() {
-    console.log(this.postCarForm);
+  getCarById() {
+    this.isSpinning = true;
+    this.adminService.getCarById(this.carId).subscribe((res) => {
+      this.isSpinning = false;
+      const carDTO = res;
+      this.existingImage = 'data:image/jpeg;base64,' + res.returnedImage;
+      this.updateForm.patchValue(carDTO);
+    });
+  }
+
+  updateCar() {
     this.isSpinning = true;
     const payload = new FormData();
-    if (this.selectedFile) {
+    if (this.imgChanged && this.selectedFile) {
       payload.append('image', this.selectedFile, this.selectedFile.name);
     }
     
-    for (const key in this.postCarForm.controls) {
-      if (this.postCarForm.controls.hasOwnProperty(key)) {
-        payload.append(key, this.postCarForm.controls[key].value);
+    for (const key in this.updateForm.controls) {
+      if (this.updateForm.controls.hasOwnProperty(key)) {
+        payload.append(key, this.updateForm.controls[key].value);
       }
     }
 
-    this.adminService.postCar(payload).subscribe(
+    this.adminService.updateCar(this.carId, payload).subscribe(
       (res) => {
         this.isSpinning = false;
-        this.message.success('Car posted successfully!', { nzDuration: 5000 });
+        this.message.success('Car updated successfully!', { nzDuration: 5000 });
         this.router.navigateByUrl('/admin/dashboard');
         console.log(res);
       },
       (error) => {
         console.error('Error: ', error);
-        this.message.error('Error while posting car', { nzDuration: 5000 });
+        this.message.error('Error while updating car', { nzDuration: 5000 });
       }
     );
   }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
+    this.imgChanged = true;
+    this.existingImage = null;
     this.previewImage();
   }
 

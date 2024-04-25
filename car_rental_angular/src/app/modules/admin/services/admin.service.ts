@@ -13,7 +13,7 @@ export class AdminService {
   constructor(private http: HttpClient) { }
   
   postCar(carDTO: any):Observable<any>{
-    return this.http.post(BASIC_URL+"/api/admin/car", carDTO, {
+    return this.http.post(BASIC_URL+"/api/admin/postcar", carDTO, {
       headers: this.createAuthorizationHeader()
     });
   }
@@ -26,6 +26,18 @@ export class AdminService {
 
   deleteCar(id:number):Observable<any> {
     return this.http.delete(BASIC_URL+"/api/admin/car/"+id, {
+      headers: this.createAuthorizationHeader()
+    });
+  }
+
+  getCarById(id:number):Observable<any> {
+    return this.http.get(BASIC_URL+"/api/admin/car/"+id, {
+      headers: this.createAuthorizationHeader()
+    });
+  }
+
+  updateCar(id: number, carDTO: any):Observable<any>{
+    return this.http.put(BASIC_URL+"/api/admin/car/"+id, carDTO, {
       headers: this.createAuthorizationHeader()
     });
   }
