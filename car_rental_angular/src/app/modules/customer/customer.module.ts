@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { CustomerRoutingModule } from './customer-routing.module';
 import { CustomerDashboardComponent } from './components/customer-dashboard/customer-dashboard.component';
-
+import { NgZorroImportsModule } from '../../NgZorroImportsModule';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,8 @@ import { CustomerDashboardComponent } from './components/customer-dashboard/cust
   ],
   imports: [
     CommonModule,
-    CustomerRoutingModule
+    CustomerRoutingModule,
+    NgZorroImportsModule
   ]
 })
 export class CustomerModule { }

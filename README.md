@@ -1,4 +1,4 @@
-# Car Rental Application (Work in Progress)
+# CarGoRent - Car Rental Application (Work in Progress)
 
 The Full-Stack Car Rental Application is a comprehensive platform designed to facilitate the rental process for both customers and administrators. It is built using modern technologies like Spring Boot, Angular, Ng Zorro, and MySQL, offering a range of features to streamline car rental operations.
 
@@ -26,6 +26,10 @@ The Full-Stack Car Rental Application is a comprehensive platform designed to fa
 ### Security
 
 - ![JWT](https://img.shields.io/badge/-JWT-000000?style=flat&logo=json-web-tokens&logoColor=white): Utilized JSON Web Tokens for secure authentication and authorization.
+
+## Conclusion
+
+In conclusion, the Full-Stack Car Rental Application demonstrates my proficiency in developing complex, modular, and maintainable web applications. Leveraging a robust technology stack, agile methodologies, and best practices in development, this project showcases my skills in full-stack development, including backend API creation, frontend design, security implementation, and database management. As a work in progress, this project reflects ongoing learning and improvement, with room for enhancements and feature additions in the future.
 
 ## Usage
 
